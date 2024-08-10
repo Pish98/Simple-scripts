@@ -1,0 +1,9 @@
+#!/bin/sh
+
+#
+# Execute it with [ -z \"$(pgrep suspendtoram)\" ] && suspendtoram to prevent possible bugs
+#
+
+echo mem > /sys/power/state
+
+sleep 4

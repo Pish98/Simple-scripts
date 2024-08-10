@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Merge all audio tracks to one
+# Requires ffmpeg
+# Example: mergeaudio input.mkv output.mp4
+
+INPUTS_COUNT=$(ffprobe -v error -select_streams a -show_entries stream=index -of csv=p=0 "$1" | wc -l)
+
+FFMPEG_OPTIONS=""
+
+if [ "$INPUTS_COUNT" != "0" ]; then
+  FFMPEG_OPTIONS="-filter_complex amix=inputs=$INPUTS_COUNT:duration=longest"
+fi
+
+ffmpeg \
+  -i "$1" \
+  -c:v copy \
+  $FFMPEG_OPTIONS \
+  "$2"
