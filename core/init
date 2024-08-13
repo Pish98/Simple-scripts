@@ -6,7 +6,7 @@
 
 # filesystems
 mount -vt efivarfs efivarfs /sys/firmware/efi/efivars -o rw,relatime # If you use efi
-swapon /swapfile # for swap
+# swapon /swapfile # for swap
 
 # udevd to manage new connected devices
 udevd --daemon
@@ -53,23 +53,29 @@ while :; do
 
       sync
 
-      for i in /media/* /mnt/* /boot; do
-      timeout 1 umount -R "$i" # umount from busybox does not have -R option!!!!!!!
-      done
+      # Uncomment if you use network filesystem
+      # umount -alt nfs
+      # umount -alt nfs4
+
+      # swapoff /swapfile # For swap
 
       # Uncomment if you need to stop HDDs before shutdown. Requires hd-idle
       # for i in /dev/sd?; do
       #   hd-idle -t $(basename "$i")
       # done
+
+      timeout 2 umount -a
       ;;
   esac
 
   case "$CMD" in
     "reboot")
         echo b > /proc/sysrq-trigger
-        ;;
+        cat # pause while. /run unmounted. /run/init/communication does not exist
+      ;;
       "poweroff")
         echo o > /proc/sysrq-trigger
+        cat # pause while. /run unmounted. /run/init/communication does not exist
       ;;
   esac
 done >/dev/null 2>/dev/null
