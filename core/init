@@ -54,8 +54,8 @@ while :; do
       sync
 
       # Uncomment if you use network filesystem
-      # umount -alt nfs
-      # umount -alt nfs4
+      # timeout 1 umount -alt nfs
+      # timeout 1 umount -alt nfs4
 
       # swapoff /swapfile # For swap
 
